@@ -15,6 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * <p>
  * 课程 服务实现类
@@ -117,5 +121,33 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
         if (i==0){
             throw new EduException(20001,"删除小节失败");
         }
+    }
+
+    @Override
+    public Map<String, Object> getCoursepageInfoList(Page<EduCourse> coursePage) {
+        baseMapper.selectPage(coursePage,null);
+        List<EduCourse> records = coursePage.getRecords();//所有符合的条件
+        long total = coursePage.getTotal();//总记录数
+        long current = coursePage.getCurrent();//获取当前页
+        long size = coursePage.getSize();//获取每页记录数
+        long pages = coursePage.getPages();//总页数
+        boolean hasPrevious = coursePage.hasPrevious();
+        boolean hasNext = coursePage.hasNext();
+        Map<String,Object> map=new HashMap<>();
+        map.put("total",total);
+        map.put("records",records);
+        map.put("current",current);
+        map.put("size",size);
+        map.put("pages",pages);
+        map.put("hasPrevious",hasPrevious);
+        map.put("hasNext",hasNext);
+        return map;
+    }
+
+    @Override
+    public CourseInfoDtoVo getCouseFrontById(String courseId) {
+            CourseInfoDtoVo courseInfoDtoVo=baseMapper.getCouseFrontById(courseId);
+
+        return courseInfoDtoVo;
     }
 }
